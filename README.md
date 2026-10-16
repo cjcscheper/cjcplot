@@ -46,10 +46,18 @@ ticks, line colours, default colormap). Switch with `use_style(...)`.
 Every plot function returns `(fig, ax)` and accepts `ax=` to draw into an
 existing figure. See `examples/` for one script per function.
 
-| | |
-|---|---|
-| ![plot_1d](examples/example_plot_1d.png) | ![plot_histogram_1d](examples/example_plot_histogram_1d.png) |
-| ![plot_2d one-sided](examples/example_plot_2d_one_sided.png) | ![plot_2d signed](examples/example_plot_2d_signed.png) |
+<!-- Image widths = fig_aspect_ratio[0] x 640 px, so all fonts appear at the same size. -->
+<p>
+  <img src="examples/example_plot_1d.png" alt="plot_1d" width="480">
+  <img src="examples/example_plot_histogram_1d.png" alt="plot_histogram_1d" width="320">
+</p>
+<p>
+  <img src="examples/example_plot_2d_one_sided.png" alt="plot_2d one-sided" width="384">
+  <img src="examples/example_plot_2d_signed.png" alt="plot_2d signed" width="384">
+</p>
+<p>
+  <img src="examples/example_colors_from_cmap.png" alt="colors_from_cmap" width="480">
+</p>
 
 ## Figure size: fractions of your LaTeX text width
 
@@ -82,7 +90,7 @@ color = style_colors()[2]       # third colour of the active style
 ```
 
 Use `style_colors()` instead of hard-coded hex values, so scripts follow the
-style when it is switched. The cjc style registers two colormaps that work by
+style when it is switched. The cjc style registers seven colormaps that work by
 name everywhere (`cmap="reds_cjc"`), each with a reversed `_r` version:
 
 - `reds_cjc` (default heatmap colormap): light grey to dark red.
