@@ -51,7 +51,7 @@ existing figure. See `examples/` for one script per function.
   <img src="examples/example_plot_1d.png" alt="plot_1d" width="480">
 </p>
 <p align="center">
-  <img src="examples/example_plot_histogram_1d.png" alt="plot_histogram_1d" width="320">
+  <img src="examples/example_colors_from_cmap.png" alt="colors_from_cmap" width="480">
 </p>
 <p align="center">
   <img src="examples/example_plot_2d_one_sided.png" alt="plot_2d one-sided" width="384">
@@ -60,25 +60,40 @@ existing figure. See `examples/` for one script per function.
   <img src="examples/example_plot_2d_signed.png" alt="plot_2d signed" width="384">
 </p>
 <p align="center">
-  <img src="examples/example_colors_from_cmap.png" alt="colors_from_cmap" width="480">
+  <img src="examples/example_plot_histogram_1d.png" alt="plot_histogram_1d" width="320">
 </p>
 
-## Figure size: fractions of your LaTeX text width
+## Figure size: fractions of your document's text width
 
-Figures are sized for a LaTeX document, so their fonts come out at the true
-point size of the style (14 pt labels, 11 pt ticks) on the page:
+Figures are sized as fractions of the text width of the document they go into.
+The default, `fig_textwidth_pt=497`, is the text width of the LaTeX document
+cjcplot was built for, but any document with a known text width works the same
+way, for example Word or PowerPoint. Inserted at that same width, nothing gets
+rescaled, so **the fonts in the figure keep the exact point size of the style**
+(14 pt labels, 11 pt ticks), in the same units as the document's own text. To
+match your body text, set the font sizes in the style to that size.
 
-1. Find your document's text width: put `\the\textwidth` in the document; it
-   prints e.g. `497.0pt`. Pass that as `fig_textwidth_pt` (default 497).
+1. Find the text width of your document in points and pass it as
+   `fig_textwidth_pt` (default 497):
+   - **LaTeX:** put `\the\textwidth` in the document; it prints e.g. `497.0pt`.
+   - **Word:** page width minus the left and right margins, e.g. A4 with 2.5 cm
+     margins: 21.0 − 5.0 = 16.0 cm = 454 pt (1 cm ≈ 28.35 pt).
+   - **PowerPoint:** the slide width, e.g. 33.87 cm = 960 pt for a 16:9 slide,
+     or the width of the area you place figures in.
+   - **Anything else** (a poster, a web page, another editor): the width of the
+     area the figure goes into, converted to points.
 2. `fig_aspect_ratio=(width, height)` gives the figure size as fractions of that
    text width: `(0.5, 0.5)` is half the text width wide and half the text width
    tall. Defaults: `(0.5, 0.5)` for `plot_1d` and `plot_histogram_1d`,
    `(0.6, 0.5)` for `plot_2d`.
-3. Include the figure at the same width fraction, so LaTeX does not rescale it:
+3. Insert the figure at the same width fraction, so it is not rescaled:
+   - **LaTeX:**
 
-   ```latex
-   \includegraphics[width=0.5\textwidth]{figure.pdf}   % for fig_aspect_ratio=(0.5, ...)
-   ```
+     ```latex
+     \includegraphics[width=0.5\textwidth]{figure.pdf}   % for fig_aspect_ratio=(0.5, ...)
+     ```
+   - **Word / PowerPoint:** insert the image and keep it at 100 % size (or set its
+     width to the same fraction of the text width, e.g. 8.0 cm for 0.5 × 16.0 cm).
 
 ## Colorbar size
 
