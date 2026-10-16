@@ -46,16 +46,20 @@ ticks, line colours, default colormap). Switch with `use_style(...)`.
 Every plot function returns `(fig, ax)` and accepts `ax=` to draw into an
 existing figure. See `examples/` for one script per function.
 
-<!-- Image widths = fig_aspect_ratio[0] x 640 px, so all fonts appear at the same size. -->
-<p>
+<!-- One centred image per row; widths = fig_aspect_ratio[0] x 640 px, so all fonts appear at the same size. -->
+<p align="center">
   <img src="examples/example_plot_1d.png" alt="plot_1d" width="480">
+</p>
+<p align="center">
   <img src="examples/example_plot_histogram_1d.png" alt="plot_histogram_1d" width="320">
 </p>
-<p>
+<p align="center">
   <img src="examples/example_plot_2d_one_sided.png" alt="plot_2d one-sided" width="384">
+</p>
+<p align="center">
   <img src="examples/example_plot_2d_signed.png" alt="plot_2d signed" width="384">
 </p>
-<p>
+<p align="center">
   <img src="examples/example_colors_from_cmap.png" alt="colors_from_cmap" width="480">
 </p>
 
