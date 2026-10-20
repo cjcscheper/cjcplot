@@ -1,10 +1,10 @@
-"""colors_from_cmap: a series of spectra coloured from one end of a colormap to the other."""
+"""colors_from_colormap: a series of spectra coloured from one end of a colormap to the other."""
 
 from pathlib import Path
 
 import numpy as np
 
-from cjcplot import colors_from_cmap, plot_1d
+from cjcplot import colors_from_colormap, plot_1d
 
 # Curves mimicking Planck's law: as the parameter rises, the peak grows and shifts left.
 x = np.linspace(0.01, 1.0, 400)
@@ -15,7 +15,7 @@ spectra = [0.0146 * x**-5 / np.expm1(1.6 / (x * parameter)) for parameter in par
 plot_1d(
     [x] * len(spectra),
     spectra,
-    colors=colors_from_cmap("redyellow_cjc", len(spectra)),
+    colors=colors_from_colormap("redyellow_cjc", len(spectra)),
     legend_labels=[f"Value {number}" for number in range(1, len(spectra) + 1)],
     first_on_top=False,
     xlim=(0.0, 1.0),

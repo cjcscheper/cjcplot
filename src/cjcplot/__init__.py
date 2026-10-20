@@ -9,11 +9,11 @@ import warnings
 from cjcplot.styles import (
     available_styles,
     colormap_from_colors,
-    colors_from_cmap,
+    colors_from_colormap,
     join_colormaps,
     register_colormap,
     style_colors,
-    style_diverging_cmap,
+    style_diverging_colormap,
     truncate_colormap,
     use_style,
 )
@@ -21,7 +21,7 @@ from cjcplot.plot_1d import plot_1d, plot_histogram_1d
 from cjcplot.plot_2d import plot_2d
 from cjcplot.plot_3d import plot_3d
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # The default style, so every figure looks consistent without extra calls. If its
 # folder was removed, plots keep working with matplotlib's own defaults.
@@ -39,7 +39,7 @@ else:
 __all__ = [
     "available_styles",
     "colormap_from_colors",
-    "colors_from_cmap",
+    "colors_from_colormap",
     "join_colormaps",
     "plot_1d",
     "plot_2d",
@@ -47,7 +47,7 @@ __all__ = [
     "plot_histogram_1d",
     "register_colormap",
     "style_colors",
-    "style_diverging_cmap",
+    "style_diverging_colormap",
     "truncate_colormap",
     "use_style",
 ]

@@ -7,7 +7,7 @@ Colours default to the active style's palette (see :func:`cjcplot.style_colors`)
 
 from __future__ import annotations
 
-from typing import Optional, Sequence
+from typing import Literal, Optional, Sequence
 
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
@@ -15,6 +15,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from cjcplot._figure import (
+    LegendLocation,
     as_trace_list,
     broadcast_to_length,
     configure_ticks,
@@ -26,6 +27,9 @@ from cjcplot._figure import (
     stacking_offset,
 )
 from cjcplot.styles import style_colors
+
+# Histogram drawing styles matplotlib accepts; listing them gives autocomplete in editors.
+HistogramType = Literal["bar", "barstacked", "step", "stepfilled"]
 
 
 def plot_1d(
@@ -46,7 +50,7 @@ def plot_1d(
     title: str = "",
     legend_show: bool = True,
     legend_labels: Optional[Sequence[str]] = None,
-    legend_loc: str = "best",
+    legend_loc: LegendLocation = "best",
     legend_ncols: int = 1,
     legend_reverse: bool = False,
     save_path: Optional[str] = None,
@@ -106,7 +110,9 @@ def plot_1d(
         Legend label per trace; missing, empty or None labels are left out, e.g.
         ``["first", None, None, "last"]`` labels only the first and last trace.
     legend_loc : str, default "best"
-        Legend position.
+        Legend position: "best", "upper right", "upper left", "lower left",
+        "lower right", "right", "center left", "center right", "lower center",
+        "upper center" or "center".
     legend_ncols : int, default 1
         Number of legend columns.
     legend_reverse : bool, default False
@@ -286,7 +292,7 @@ def plot_histogram_1d(
     bin_range: Optional[tuple[float, float]] = None,
     density: bool = False,
     weights: Optional[ArrayLike | Sequence[ArrayLike]] = None,
-    histtype: str | Sequence[str] = "step",
+    histtype: HistogramType | Sequence[HistogramType] = "step",
     fill: bool | Sequence[bool] = True,
     hatch: Optional[str | Sequence[Optional[str]]] = None,
     alpha: float | Sequence[float] = 0.8,
@@ -300,7 +306,7 @@ def plot_histogram_1d(
     title: str = "",
     legend_show: bool = True,
     legend_labels: Optional[Sequence[str]] = None,
-    legend_loc: str = "best",
+    legend_loc: LegendLocation = "best",
     legend_ncols: int = 1,
     legend_reverse: bool = False,
     save_path: Optional[str] = None,
@@ -400,7 +406,7 @@ def plot_histogram_1d(
     # Per-dataset styling, filled up to the number of datasets.
     colors = cycle_to_length(style_colors() if colors is None else colors, dataset_count, "colors")
     legend_labels = pad_to_length(legend_labels, dataset_count, "")
-    histtype_list = broadcast_to_length(histtype, dataset_count, "histtype")
+    histtype_list: list[HistogramType] = broadcast_to_length(histtype, dataset_count, "histtype")
     fill_list = broadcast_to_length(fill, dataset_count, "fill")
     hatch_list = broadcast_to_length(hatch, dataset_count, "hatch")
     alpha_list = broadcast_to_length(alpha, dataset_count, "alpha")
@@ -410,7 +416,7 @@ def plot_histogram_1d(
     # Draw in the given order, so the legend follows legend_labels; first_on_top
     # only sets which histogram lies on top through its zorder.
     for i in range(dataset_count):
-        histtype_i = "stepfilled" if (fill_list[i] and histtype_list[i] == "step") else histtype_list[i]
+        histtype_i: HistogramType = "stepfilled" if (fill_list[i] and histtype_list[i] == "step") else histtype_list[i]
         _, _, patches = ax.hist(
             data_arrays[i],
             bins=histogram_bins,

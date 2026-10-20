@@ -1,6 +1,7 @@
 # cjcplot
 
 [![tests](https://github.com/cjcscheper/cjcplot/actions/workflows/tests.yml/badge.svg)](https://github.com/cjcscheper/cjcplot/actions/workflows/tests.yml)
+[![release](https://img.shields.io/github/v/release/cjcscheper/cjcplot)](https://github.com/cjcscheper/cjcplot/releases)
 
 Publication-ready matplotlib figures sized to a LaTeX text width, with one
 consistent, switchable style.
@@ -9,6 +10,15 @@ consistent, switchable style.
 
 ```bash
 pip install git+https://github.com/cjcscheper/cjcplot.git
+```
+
+To pin a fixed version, so a script keeps producing the same figures later on
+(replace `v0.2.0` with the release you want, see
+[Releases](https://github.com/cjcscheper/cjcplot/releases) and the
+[changelog](CHANGELOG.md)):
+
+```bash
+pip install git+https://github.com/cjcscheper/cjcplot.git@v0.2.0
 ```
 
 For development, clone the repository and install it editable:
@@ -23,25 +33,36 @@ pip install -e ".[test]"
 import numpy as np
 from cjcplot import plot_1d
 
-time_ps = np.linspace(0, 10, 200)
+x = np.linspace(0.0, 1.0, 200)
+y = np.exp(-x / 0.4) * np.sin(4 * np.pi * x)
+
 fig, ax = plot_1d(
-    time_ps, np.cos(2 * time_ps) * np.exp(-time_ps / 4),
-    xlabel="Time [ps]", ylabel="Field [a.u.]",
+    x_data=x,
+    y_data=y,
+    xlabel="X axis [arb. u]",
+    ylabel="Y axis [arb. u]",
     fig_aspect_ratio=(0.75, 0.5),   # (width, height) as fractions of the text width
 )
 ```
 
-**Importing cjcplot applies the cjc style** to all matplotlib figures (fonts,
-ticks, line colours, default colormap). Switch with `use_style(...)`.
+**Importing cjcplot applies the built-in cjc style** to all matplotlib figures
+(fonts, ticks, line colours, default colormap). It is easy to replace with your
+own: create a style folder with your own `.mplstyle` (and optionally your own
+colours), then switch to it with one line at the top of your script:
+
+```python
+from cjcplot import use_style
+use_style("path/to/my_style")   # your own style folder, see "Styles" below
+```
 
 ## Functions
 
-| Function | Use |
-|---|---|
-| `plot_1d` | one or more traces: lines, markers, x/y error bars, reference lines |
-| `plot_histogram_1d` | one or more overlaid histograms (shared bins, `density`, `weights`, fills, hatches) |
-| `plot_2d` | heatmap with optional contours; colorbar sized relative to the plot, `cbar_symmetric`, `nan_color` |
-| `plot_3d` | placeholder, not implemented yet |
+| Function            | Use                                                                                                |
+|---------------------|----------------------------------------------------------------------------------------------------|
+| `plot_1d`           | one or more traces: lines, markers, x/y error bars, reference lines                                |
+| `plot_histogram_1d` | one or more overlaid histograms (shared bins, `density`, `weights`, fills, hatches)                |
+| `plot_2d`           | heatmap with optional contours; colorbar sized relative to the plot, `cbar_symmetric`, `nan_color` |
+| `plot_3d`           | placeholder, not implemented yet                                                                   |
 
 Every plot function returns `(fig, ax)` and accepts `ax=` to draw into an
 existing figure. See `examples/` for one script per function.
@@ -51,7 +72,7 @@ existing figure. See `examples/` for one script per function.
   <img src="examples/example_plot_1d.png" alt="plot_1d" width="480">
 </p>
 <p align="center">
-  <img src="examples/example_colors_from_cmap.png" alt="colors_from_cmap" width="480">
+  <img src="examples/example_colors_from_colormap.png" alt="colors_from_colormap" width="480">
 </p>
 <p align="center">
   <img src="examples/example_plot_2d_one_sided.png" alt="plot_2d one-sided" width="384">
@@ -123,8 +144,8 @@ name everywhere (`cmap="reds_cjc"`), each with a reversed `_r` version:
 Line colours from a colormap, first trace at its left end and last at its right end:
 
 ```python
-from cjcplot import colors_from_cmap, plot_1d
-plot_1d(x_traces, y_traces, colors=colors_from_cmap("blueyellow_cjc", len(y_traces)))
+from cjcplot import colors_from_colormap, plot_1d
+plot_1d(x_traces, y_traces, colors=colors_from_colormap("blueyellow_cjc", len(y_traces)))
 ```
 
 Every name gives the order from low to high values; the suffix `_r` gives the
@@ -149,8 +170,8 @@ use_style("path/to/my.mplstyle")   # a single matplotlib style file
 ```
 
 A style folder `my_style/` contains `my_style.mplstyle` (fonts, ticks, dpi) and
-optionally `colors.py` with `PALETTE`, `COLORMAPS`, `DEFAULT_CMAP` and
-`DIVERGING_CMAP`. To add a style to the package, copy `src/cjcplot/styles/cjc/`,
+optionally `colors.py` with `PALETTE`, `COLORMAPS`, `DEFAULT_COLORMAP` and
+`DIVERGING_COLORMAP`. To add a style to the package, copy `src/cjcplot/styles/cjc/`,
 rename the folder and its `.mplstyle`, and edit both files.
 
 **Keep `styles/cjc/`:** it is the built-in default that importing cjcplot applies.

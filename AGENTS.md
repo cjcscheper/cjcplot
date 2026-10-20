@@ -1,6 +1,12 @@
 # AGENTS.md — cjcplot
 
-Guidance for AI coding agents (and humans) working in this repository.
+Guidance for AI coding agents (and contributors) working in this repository.
+
+This file covers much of the same ground as `README.md`, but for a different
+reader: `README.md` is for humans who *use* cjcplot (install, examples, how to
+size figures); this file is for agents who *work on* it (layout, design rules,
+conventions, tests, releases). When something changes that both describe,
+such as the public API, styles or colormaps, update both.
 
 cjcplot makes publication-ready matplotlib figures sized to a LaTeX text width,
 with one consistent, switchable style.
@@ -19,8 +25,8 @@ Scripts import only from the package root, never from submodules:
 
 ```python
 from cjcplot import plot_1d, plot_histogram_1d, plot_2d, plot_3d
-from cjcplot import use_style, available_styles, style_colors, style_diverging_cmap
-from cjcplot import colors_from_cmap, colormap_from_colors, join_colormaps, truncate_colormap, register_colormap
+from cjcplot import use_style, available_styles, style_colors, style_diverging_colormap
+from cjcplot import colors_from_colormap, colormap_from_colors, join_colormaps, truncate_colormap, register_colormap
 ```
 
 ## Package layout
@@ -33,12 +39,12 @@ src/cjcplot/
   plot_2d.py         plot_2d
   plot_3d.py         plot_3d (placeholder, not implemented yet)
   styles/
-    __init__.py      use_style(), available_styles(), style_colors(), style_diverging_cmap()
-    _colormap_tools.py  colors_from_cmap(), colormap_from_colors(), join_colormaps(),
+    __init__.py      use_style(), available_styles(), style_colors(), style_diverging_colormap()
+    _colormap_tools.py  colors_from_colormap(), colormap_from_colors(), join_colormaps(),
                         truncate_colormap(), register_colormap()
     cjc/
       cjc.mplstyle   fonts, ticks, dpi, line widths
-      colors.py      PALETTE, COLORMAPS, DEFAULT_CMAP, DIVERGING_CMAP
+      colors.py      PALETTE, COLORMAPS, DEFAULT_COLORMAP, DIVERGING_COLORMAP
 ```
 
 ## Design rules for every plot function
@@ -66,7 +72,7 @@ src/cjcplot/
 - `use_style(name_or_path)` takes a bundled style name, a style folder, or a single
   `.mplstyle` file. It first resets matplotlib to its defaults.
 - A style folder `<name>/` holds `<name>.mplstyle` and optionally `colors.py`.
-  `colors.py` may define `PALETTE`, `COLORMAPS`, `DEFAULT_CMAP`, `DIVERGING_CMAP`
+  `colors.py` may define `PALETTE`, `COLORMAPS`, `DEFAULT_COLORMAP`, `DIVERGING_COLORMAP`
   (all optional); see `styles/cjc/colors.py` for the reference.
 - Scripts get line colours with `style_colors()[i]`, not hard-coded hex values.
 - New group styles: copy `styles/cjc/`, rename folder and `.mplstyle`, edit both.
@@ -74,8 +80,10 @@ src/cjcplot/
 ## Coding conventions
 
 - Every logical block inside a function gets a one-line `#` comment saying why it exists.
-- SI units need no suffix; non-SI or scaled values carry one (`_pt`, `_mm`, `_ps`, `_thz`, `_um`).
-- Physicist-first API: descriptive argument names over programmer idioms.
+- SI units need no suffix; non-SI or scaled values carry one (`_pt`, `_mm`, `_ps`, `_um`).
+- Write `colormap` in function and constant names (`colors_from_colormap`,
+  `DEFAULT_COLORMAP`); use `cmap` only for keyword arguments (`cmap=`,
+  `contour_cmap=`), as matplotlib does.
 - No helper functions copied between modules; shared code goes in `_figure.py`.
 - Remove unused code instead of leaving it commented out.
 - Python 3.10 compatible (no syntax newer than 3.10).
@@ -86,5 +94,36 @@ src/cjcplot/
   before every test.
 - Every option group has a test; wrong shapes and conflicting options raise
   `ValueError`s with clear messages, and those messages are tested.
+- New or changed functionality comes with new or updated tests in the same
+  change, and `pytest` passes before committing. When the public API changes,
+  update the README, this file and the affected examples (and their PNGs) too.
+- Every test has a one-line docstring saying what it checks; non-obvious lines
+  (matplotlib internals, the reason behind a check) get a short comment.
 - GitHub Actions (`.github/workflows/tests.yml`) runs `pytest` on Python 3.10 and 3.14
   for every push and pull request.
+
+## Changelog and releases
+
+- Every change that users notice (new or changed functionality, fixes, docs
+  people rely on) gets a line in `CHANGELOG.md` under `## [Unreleased]`, in the
+  same change, sorted under `### Added`, `### Changed`, `### Fixed` or `### Removed`.
+- Before finishing a change, check that `CHANGELOG.md` describes it.
+- Versions follow MAJOR.MINOR.PATCH: patch for fixes, minor for new features,
+  major for changes that break existing scripts (below 1.0 the API may still change).
+- A release:
+  1. rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD` and start a new empty
+     `## [Unreleased]` above it;
+  2. set the new version in `src/cjcplot/__init__.py` (`__version__`), its only
+     source: `pyproject.toml` reads it from there; also update the pinned
+     version in the README's install command;
+  3. commit, tag `vX.Y.Z`, push the commit and the tag, and publish the GitHub
+     release with the changelog section as its notes.
+
+## Git workflow
+
+- Do not commit, push, tag, merge or force-push without the maintainer's approval.
+- Keep each change focused: no unrelated reformatting or renaming mixed in.
+- Keep generated files in the same change as the code that produces them, e.g.
+  regenerate an example's PNG when the example or the plotting code changes.
+- In the commit message (or pull request), summarise what changes for users and
+  how it was checked (tests run, examples regenerated).

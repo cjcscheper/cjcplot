@@ -8,15 +8,15 @@ from cjcplot import plot_histogram_1d
 
 # Samples mimicking a Gaussian and a Lorentzian distribution of similar width.
 rng = np.random.default_rng(0)
-gaussian_samples = rng.normal(0.0, 0.12, 50000)
-lorentzian_samples = 0.14 * rng.standard_cauchy(50000)
+gaussian_samples = rng.normal(0.0, 0.12, 500000)
+lorentzian_samples = 0.14 * rng.standard_cauchy(500000)
 
 # A constant weight per sample scales the counts to arbitrary units below 1.
 plot_histogram_1d(
     [gaussian_samples, lorentzian_samples],
-    bins=80,
+    bins=200,
     bin_range=(-1.0, 1.0),
-    weights=[np.full(50000, 1.7e-4)] * 2,
+    weights=[np.full(500000, 4.25e-5)] * 2,
     first_on_top=False,
     legend_labels=["Gaussian", "Lorentzian"],
     legend_loc="upper left",

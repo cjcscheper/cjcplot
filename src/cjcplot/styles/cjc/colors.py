@@ -9,8 +9,8 @@ simply keeps the colours of its .mplstyle file.
   active style instead of hard-coding this list.
 - ``COLORMAPS``: colormaps registered with matplotlib under their name (plus a
   reversed ``<name>_r``), so ``cmap="reds_cjc"`` works everywhere.
-- ``DEFAULT_CMAP``: default heatmap colormap (``image.cmap``).
-- ``DIVERGING_CMAP``: colormap for signed data centred on zero, used by
+- ``DEFAULT_COLORMAP``: default heatmap colormap (``image.cmap``).
+- ``DIVERGING_COLORMAP``: colormap for signed data centred on zero, used by
   :func:`cjcplot.plot_2d` when ``cbar_symmetric=True`` and no ``cmap`` is given.
 """
 
@@ -55,7 +55,7 @@ _bluered = join_colormaps(_blues.reversed(), _reds, "bluered_cjc")
 
 # Two-colour maps straight between palette colours, without a white or grey
 # midpoint, so they match the line colours of the same plots. Both directions
-# have their own name; sample them for line colours with colors_from_cmap().
+# have their own name; sample them for line colours with colors_from_colormap().
 _blueyellow = colormap_from_colors([PALETTE[0], PALETTE[1]], "blueyellow_cjc")
 _yellowblue = colormap_from_colors([PALETTE[1], PALETTE[0]], "yellowblue_cjc")
 _yellowred = colormap_from_colors([PALETTE[1], PALETTE[2]], "yellowred_cjc")
@@ -63,5 +63,5 @@ _redyellow = colormap_from_colors([PALETTE[2], PALETTE[1]], "redyellow_cjc")
 
 COLORMAPS = (_reds, _blues, _bluered, _blueyellow, _yellowblue, _yellowred, _redyellow)
 
-DEFAULT_CMAP = "reds_cjc"
-DIVERGING_CMAP = "bluered_cjc"
+DEFAULT_COLORMAP = "reds_cjc"
+DIVERGING_COLORMAP = "bluered_cjc"

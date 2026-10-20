@@ -4,7 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cjcplot"
-version = "0.1.0"
+# The version is read from src/cjcplot/__init__.py (__version__), its only source.
+dynamic = ["version"]
 description = "Publication-ready matplotlib figures sized to a LaTeX text width, with switchable styles."
 readme = "README.md"
 license = "MIT"
@@ -18,6 +19,9 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest"]
+
+[tool.setuptools.dynamic]
+version = { attr = "cjcplot.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]

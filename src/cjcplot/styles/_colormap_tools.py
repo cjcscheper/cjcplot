@@ -41,14 +41,14 @@ def join_colormaps(low: Colormap, high: Colormap, name: str, color_count: int = 
     return ListedColormap(np.vstack((low(samples), high(samples))), name=name)
 
 
-def colors_from_cmap(cmap: str | Colormap, count: int) -> list[str]:
+def colors_from_colormap(cmap: str | Colormap, count: int) -> list[str]:
     """Return ``count`` evenly spaced colours of a colormap, as hex strings.
 
     The first colour is the colormap's left (low) end and the last its right
     (high) end, so a series of line traces runs through the whole map. Pass the
     result as ``colors=`` to :func:`cjcplot.plot_1d`.
 
-    Example: ``plot_1d(x_traces, y_traces, colors=colors_from_cmap("blueyellow_cjc", 5))``.
+    Example: ``plot_1d(x_traces, y_traces, colors=colors_from_colormap("blueyellow_cjc", 5))``.
     """
     if count < 1:
         raise ValueError("count must be at least 1.")

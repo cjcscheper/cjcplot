@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 
 from cjcplot.styles._colormap_tools import (
     colormap_from_colors,
-    colors_from_cmap,
+    colors_from_colormap,
     join_colormaps,
     register_colormap,
     truncate_colormap,
@@ -34,7 +34,7 @@ from cjcplot.styles._colormap_tools import (
 STYLES_DIR = Path(__file__).resolve().parent
 
 # Diverging colormap of the active style, used by plot_2d(cbar_symmetric=True).
-_active_diverging_cmap = "RdBu_r"
+_active_diverging_colormap = "RdBu_r"
 
 
 def available_styles() -> list[str]:
@@ -59,7 +59,7 @@ def use_style(name_or_path: Union[str, Path]) -> None:
     Matplotlib's settings are first reset to their defaults, so nothing of the
     previous style remains. For a style folder, its colors.py (if present) is
     then applied: colormaps are registered, ``PALETTE`` becomes the colour cycle
-    and ``DEFAULT_CMAP`` the default heatmap colormap.
+    and ``DEFAULT_COLORMAP`` the default heatmap colormap.
 
     Examples
     --------
@@ -67,7 +67,7 @@ def use_style(name_or_path: Union[str, Path]) -> None:
     ``my_style.mplstyle`` and optionally ``colors.py``), or
     ``use_style("path/to/my.mplstyle")`` (settings only, no colors.py).
     """
-    global _active_diverging_cmap
+    global _active_diverging_colormap
 
     # Resolve the argument to an .mplstyle file and an optional colors.py.
     path = Path(name_or_path)
@@ -97,13 +97,13 @@ def use_style(name_or_path: Union[str, Path]) -> None:
     plt.style.use(["default", str(mplstyle_path)])
 
     # The style's colours override whatever the .mplstyle file set.
-    _active_diverging_cmap = "RdBu_r"
+    _active_diverging_colormap = "RdBu_r"
     if colors is not None:
         if getattr(colors, "PALETTE", None):
             plt.rcParams["axes.prop_cycle"] = cycler(color=list(colors.PALETTE))
-        if getattr(colors, "DEFAULT_CMAP", None):
-            plt.rcParams["image.cmap"] = colors.DEFAULT_CMAP
-        _active_diverging_cmap = getattr(colors, "DIVERGING_CMAP", _active_diverging_cmap)
+        if getattr(colors, "DEFAULT_COLORMAP", None):
+            plt.rcParams["image.cmap"] = colors.DEFAULT_COLORMAP
+        _active_diverging_colormap = getattr(colors, "DIVERGING_COLORMAP", _active_diverging_colormap)
 
 
 def style_colors() -> list[str]:
@@ -117,19 +117,19 @@ def style_colors() -> list[str]:
     return list(plt.rcParams["axes.prop_cycle"].by_key().get("color", []))
 
 
-def style_diverging_cmap() -> str:
+def style_diverging_colormap() -> str:
     """Return the diverging colormap of the active style (``RdBu_r`` unless the style sets one)."""
-    return _active_diverging_cmap
+    return _active_diverging_colormap
 
 
 __all__ = [
     "available_styles",
     "colormap_from_colors",
-    "colors_from_cmap",
+    "colors_from_colormap",
     "join_colormaps",
     "register_colormap",
     "style_colors",
-    "style_diverging_cmap",
+    "style_diverging_colormap",
     "truncate_colormap",
     "use_style",
 ]

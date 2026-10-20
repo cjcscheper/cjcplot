@@ -18,7 +18,10 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from cjcplot._figure import configure_ticks, create_figure_and_axes, finalize_axes
-from cjcplot.styles import style_diverging_cmap
+from cjcplot.styles import style_diverging_colormap
+
+# pcolormesh shading modes; listing them gives autocomplete in editors.
+MeshShading = Literal["flat", "nearest", "gouraud", "auto"]
 
 
 def _cell_edges(centers: np.ndarray, log: bool) -> np.ndarray:
@@ -50,7 +53,7 @@ def plot_2d(
     clim: Optional[Sequence[Optional[float]]] = None,
     cmap: Optional[Union[str, Colormap]] = None,
     nan_color: str = "white",
-    shading: Optional[Literal["flat", "nearest", "gouraud", "auto"]] = "auto",
+    shading: Optional[MeshShading] = "auto",
     aspect: Union[Literal["auto", "equal"], float] = "auto",
     fig_show: bool = True,
     save_path: Optional[str] = None,
@@ -175,7 +178,7 @@ def plot_2d(
         raise ValueError("z_data must be a 2D array.")
 
     # Contours always use the cell centres; the heatmap may need cell edges.
-    mesh_shading = shading
+    mesh_shading: Optional[MeshShading] = shading
     if x_array.ndim == 1 and y_array.ndim == 1:
         if z_array.shape != (y_array.size, x_array.size):
             raise ValueError("z_data shape must be (len(y_data), len(x_data)) when x_data/y_data are 1D.")
@@ -229,11 +232,13 @@ def plot_2d(
             raise ValueError("logcbar=True requires both clim limits to be strictly positive.")
         if clim_min >= clim_max:
             raise ValueError("clim[0] must be smaller than clim[1].")
+        # matplotlib builds LogNorm at runtime, which PyCharm wrongly reads as abstract.
+        # noinspection PyAbstractClass
         color_norm = LogNorm(vmin=clim_min, vmax=clim_max)
 
     # Colormap from the argument or the style, with NaN cells in nan_color.
     if cmap is None:
-        cmap = style_diverging_cmap() if cbar_symmetric else plt.rcParams["image.cmap"]
+        cmap = style_diverging_colormap() if cbar_symmetric else plt.rcParams["image.cmap"]
     heatmap_cmap = matplotlib.colormaps.get_cmap(cmap).with_extremes(bad=nan_color)
 
     # Render the heatmap.
@@ -265,7 +270,7 @@ def plot_2d(
     if cbar_show:
         if cax is None:
             cbar_width, cbar_height = cbar_aspect_ratio
-            cax = ax.inset_axes([1.0 + cbar_pad, (1.0 - cbar_height) / 2.0, cbar_width, cbar_height])
+            cax = ax.inset_axes((1.0 + cbar_pad, (1.0 - cbar_height) / 2.0, cbar_width, cbar_height))
         fig.colorbar(im, cax=cax, label=cbar_label, ticks=cbar_ticks)
 
     ax.set_aspect(aspect)
