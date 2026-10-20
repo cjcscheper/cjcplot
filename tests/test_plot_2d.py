@@ -13,6 +13,16 @@ Y = np.linspace(0.0, 2.0, 5)
 Z = np.outer(Y, X)
 
 
+def _corners(bbox):
+    """Return (x0, y0, x1, y1) of a matplotlib bounding box.
+
+    Read through get_points() rather than the .x0/.width attributes: those are
+    properties that PyCharm's type checker misreads as "property" instead of float.
+    """
+    (x0, y0), (x1, y1) = bbox.get_points()
+    return x0, y0, x1, y1
+
+
 def _mesh(ax):
     """Return the heatmap itself: pcolormesh stores it as a QuadMesh in ax.collections."""
     return next(c for c in ax.collections if isinstance(c, matplotlib.collections.QuadMesh))
@@ -65,12 +75,16 @@ def test_equal_aspect_fits_inside_figure():
     # Positions are only final after drawing; the renderer measures text extents.
     fig.canvas.draw()
     renderer = fig.canvas.get_renderer()
+    # Figure edges in pixels; the plot box is given in fractions of the figure.
+    fig_x0, fig_y0, fig_x1, fig_y1 = _corners(fig.bbox)
+    box_x0, box_y0, box_x1, box_y1 = _corners(ax.get_position())
     # The plot box is square: its width equals its height in pixels.
-    plot_box = ax.get_position()
-    assert np.isclose(plot_box.width * fig.bbox.width, plot_box.height * fig.bbox.height, rtol=1e-3)
+    box_width_px = (box_x1 - box_x0) * (fig_x1 - fig_x0)
+    box_height_px = (box_y1 - box_y0) * (fig_y1 - fig_y0)
+    assert np.isclose(box_width_px, box_height_px, rtol=1e-3)
     # The y-label stays inside the left edge, the colorbar label inside the right edge.
-    assert ax.get_tightbbox(renderer).x0 >= fig.bbox.x0 - 1e-6
-    assert ax.child_axes[0].get_tightbbox(renderer).x1 <= fig.bbox.x1 + 1e-6
+    assert _corners(ax.get_tightbbox(renderer))[0] >= fig_x0 - 1e-6
+    assert _corners(ax.child_axes[0].get_tightbbox(renderer))[2] <= fig_x1 + 1e-6
 
 
 def test_cbar_symmetric_conflicts_raise():
@@ -96,12 +110,12 @@ def test_cbar_aspect_ratio_is_relative_to_plot_box_and_fits_in_figure():
     fig.canvas.draw()
     # The colorbar is an inset of the plot, so it is the plot's first child axes.
     cax = ax.child_axes[0]
-    plot_box = ax.get_position()
-    cbar_box = cax.get_position()
-    assert np.isclose(cbar_box.height, 0.5 * plot_box.height)
-    assert np.isclose(cbar_box.width, 0.05 * plot_box.width)
+    plot_x0, plot_y0, plot_x1, plot_y1 = _corners(ax.get_position())
+    cbar_x0, cbar_y0, cbar_x1, cbar_y1 = _corners(cax.get_position())
+    assert np.isclose(cbar_y1 - cbar_y0, 0.5 * (plot_y1 - plot_y0))
+    assert np.isclose(cbar_x1 - cbar_x0, 0.05 * (plot_x1 - plot_x0))
     # The layout leaves room for the colorbar and its label inside the figure.
-    assert cax.get_tightbbox(fig.canvas.get_renderer()).x1 <= fig.bbox.x1 + 1e-6
+    assert _corners(cax.get_tightbbox(fig.canvas.get_renderer()))[2] <= _corners(fig.bbox)[2] + 1e-6
 
 
 def test_contours_default_to_one_style_colour():

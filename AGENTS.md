@@ -79,6 +79,10 @@ src/cjcplot/
 
 ## Coding conventions
 
+- Code is written as plain functions (inputs in, outputs out). Classes are only
+  used as frozen dataclasses for returned data, without methods or inheritance;
+  no class hierarchies, no objects that change themselves, no classes that only
+  group functions (a module does that).
 - Every logical block inside a function gets a one-line `#` comment saying why it exists.
 - SI units need no suffix; non-SI or scaled values carry one (`_pt`, `_mm`, `_ps`, `_um`).
 - Write `colormap` in function and constant names (`colors_from_colormap`,

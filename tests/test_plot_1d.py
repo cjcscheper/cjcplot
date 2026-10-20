@@ -136,8 +136,9 @@ def test_histograms_share_bin_edges_and_accept_bin_range():
     _, ax = cjcplot.plot_histogram_1d(
         [rng.normal(0, 1, 500), rng.normal(1, 1, 500)], bins=20, bin_range=(-3, 4), fig_show=False
     )
-    # The x-coordinates of each histogram's outline are its bin edges.
-    edges = [patch.get_path().vertices[:, 0] for patch in ax.patches]
+    # The x-coordinates of each histogram's outline are its bin edges. np.asarray tells
+    # type checkers the vertices are an array (matplotlib's hints leave them unclear).
+    edges = [np.asarray(patch.get_path().vertices)[:, 0] for patch in ax.patches]
     assert np.isclose(min(e.min() for e in edges), -3) and np.isclose(max(e.max() for e in edges), 4)
 
 
@@ -148,7 +149,8 @@ def test_histogram_density_plots_probability_density():
     density_values, _ = np.histogram(samples, bins=30, density=True)
     _, ax = cjcplot.plot_histogram_1d(samples, bins=30, density=True, fig_show=False)
     # The outline's highest point (largest y-coordinate) is the tallest density bin, not a count.
-    assert np.isclose(ax.patches[0].get_path().vertices[:, 1].max(), density_values.max())
+    outline = np.asarray(ax.patches[0].get_path().vertices)
+    assert np.isclose(outline[:, 1].max(), density_values.max())
 
 
 def test_histogram_weights_shape_is_checked():
