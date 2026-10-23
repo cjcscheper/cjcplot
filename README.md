@@ -67,19 +67,44 @@ use_style("path/to/my_style")   # your own style folder, see "Styles" below
 Every plot function returns `(fig, ax)` and accepts `ax=` to draw into an
 existing figure. See `examples/` for one script per function.
 
-<!-- One centred image per row; widths = fig_aspect_ratio[0] x 640 px, so all fonts appear at the same size. -->
+<!-- widths = fig_aspect_ratio[0] x 640 px, so all fonts appear at the same size. -->
+
+### `plot_1d` — `example_plot_1d.py`
+
+A measurement with error bars and markers, a reference curve, and vertical and
+horizontal reference lines, each with its own legend entry.
+
 <p align="center">
   <img src="examples/example_plot_1d.png" alt="plot_1d" width="480">
 </p>
+
+### `colors_from_colormap` — `example_colors_from_colormap.py`
+
+A series of spectra coloured from one end of a colormap to the other
+(`redyellow_cjc`): the first curve red, the last yellow.
+
 <p align="center">
   <img src="examples/example_colors_from_colormap.png" alt="colors_from_colormap" width="480">
 </p>
-<p align="center">
-  <img src="examples/example_plot_2d_one_sided.png" alt="plot_2d one-sided" width="384">
-</p>
-<p align="center">
-  <img src="examples/example_plot_2d_signed.png" alt="plot_2d signed" width="384">
-</p>
+
+### `plot_2d` — `example_plot_2d.py`
+
+Left a one-sided map (a beam spot, default `reds_cjc`), right a signed map (a
+dipole potential) with `cbar_symmetric=True`, which centres the diverging
+colormap on zero.
+
+<table align="center">
+  <tr>
+    <td><img src="examples/example_plot_2d_one_sided.png" alt="plot_2d one-sided" width="384"></td>
+    <td><img src="examples/example_plot_2d_signed.png" alt="plot_2d signed" width="384"></td>
+  </tr>
+</table>
+
+### `plot_histogram_1d` — `example_plot_histogram_1d.py`
+
+Two overlaid histograms on shared bins, a Gaussian and a Lorentzian of similar
+width, the second drawn on top.
+
 <p align="center">
   <img src="examples/example_plot_histogram_1d.png" alt="plot_histogram_1d" width="320">
 </p>
