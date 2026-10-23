@@ -69,7 +69,7 @@ existing figure. See `examples/` for one script per function.
 
 <!-- widths = fig_aspect_ratio[0] x 640 px, so all fonts appear at the same size. -->
 
-### `plot_1d` — `example_plot_1d.py`
+### `plot_1d`
 
 A measurement with error bars and markers, a reference curve, and vertical and
 horizontal reference lines, each with its own legend entry.
@@ -78,7 +78,7 @@ horizontal reference lines, each with its own legend entry.
   <img src="examples/example_plot_1d.png" alt="plot_1d" width="480">
 </p>
 
-### `colors_from_colormap` — `example_colors_from_colormap.py`
+### `colors_from_colormap`
 
 A series of spectra coloured from one end of a colormap to the other
 (`redyellow_cjc`): the first curve red, the last yellow.
@@ -87,7 +87,7 @@ A series of spectra coloured from one end of a colormap to the other
   <img src="examples/example_colors_from_colormap.png" alt="colors_from_colormap" width="480">
 </p>
 
-### `plot_2d` — `example_plot_2d.py`
+### `plot_2d`
 
 Left a one-sided map (a beam spot, default `reds_cjc`), right a signed map (a
 dipole potential) with `cbar_symmetric=True`, which centres the diverging
@@ -100,7 +100,7 @@ colormap on zero.
   </tr>
 </table>
 
-### `plot_histogram_1d` — `example_plot_histogram_1d.py`
+### `plot_histogram_1d`
 
 Two overlaid histograms on shared bins, a Gaussian and a Lorentzian of similar
 width, the second drawn on top.
